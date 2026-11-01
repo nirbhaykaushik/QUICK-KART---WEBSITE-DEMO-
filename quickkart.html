@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickKart | Online Shopping</title>
+<style>
+*{box-sizing:border-box}
+:root{--nav:#131921;--nav2:#232f3e;--yellow:#ffd814;--orange:#ff9900;--border:#ddd}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#e3e6e6;color:#111}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.top{background:var(--nav);color:white;padding:12px 3%;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.logo{font-size:29px;font-weight:bold;color:white;white-space:nowrap}
+.logo span{color:var(--orange)}
+.location{font-size:12px;line-height:1.5}
+.location b{font-size:14px}
+.search{display:flex;flex:1;min-width:220px;height:42px}
+.search select{width:75px;border:0;background:#eee;padding:5px;border-radius:5px 0 0 5px}
+.search input{flex:1;min-width:0;border:0;padding:10px;outline:none}
+.search button{width:48px;border:0;background:var(--orange);font-size:22px;border-radius:0 5px 5px 0}
+.top-action{color:white;font-size:12px;white-space:nowrap}
+.top-action b{display:block;font-size:14px}
+.cart-button{background:none;border:0;color:white;font-size:17px;font-weight:bold}
+#cartCount{background:var(--orange);color:#111;padding:2px 7px;border-radius:20px}
+.nav{background:var(--nav2);padding:12px 3%;display:flex;gap:22px;overflow:auto;white-space:nowrap}
+.nav a{color:white;text-decoration:none;font-size:14px}
+.nav a:hover{text-decoration:underline}
+main{max-width:1500px;margin:auto;padding:15px}
+.hero{height:340px;background:#ffeadb;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.hero-text{padding:45px 7%;align-self:center}
+.hero-text small{font-weight:bold;color:#b34d13}
+.hero h1{font-size:clamp(30px,4vw,52px);line-height:1.08;margin:12px 0}
+.hero p{line-height:1.6;color:#444}
+.hero img{width:100%;height:100%;object-fit:cover}
+.btn{background:var(--yellow);border:1px solid #f0c14b;border-radius:20px;padding:10px 20px;font-weight:bold}
+.btn:hover{background:#f7ca00}
+.benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:15px 0}
+.benefit{background:white;padding:17px;border-radius:5px;font-size:13px}
+.benefit b{display:block;font-size:15px;margin-bottom:6px}
+.section{background:white;margin:16px 0;padding:20px;border-radius:4px}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.heading h2{font-size:23px;margin:0 0 17px}
+.categories{display:grid;grid-template-columns:repeat(6,1fr);gap:13px}
+.category{border:1px solid var(--border);padding:10px;text-align:center;cursor:pointer;border-radius:5px}
+.category:hover,.category.active{border:2px solid var(--orange);background:#fffaf1}
+.category img{width:100%;height:115px;object-fit:cover}
+.category b{display:block;margin-top:8px;font-size:14px}
+.products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.product{border:1px solid #eee;padding:12px;border-radius:5px;min-width:0;transition:.2s}
+.product:hover{box-shadow:0 3px 12px #0002}
+.product img{width:100%;height:190px;object-fit:contain;background:#fafafa}
+.product h3{font-size:15px;line-height:1.4;min-height:40px}
+.seller{font-size:11px;color:#666}
+.rating{color:#b87900;font-size:13px}
+.price{font-size:22px;font-weight:bold;margin:10px 0}
+.old{font-size:12px;color:#666;text-decoration:line-through;font-weight:normal}
+.discount{color:#087c37;font-size:12px}
+.add{width:100%;border:0;background:var(--yellow);border-radius:20px;padding:10px;font-size:13px}
+.add:hover{background:#f3c900}
+.empty{text-align:center;padding:35px;color:#666;grid-column:1/-1}
+footer{background:var(--nav2);color:white;padding:28px 5%;text-align:center;line-height:1.8}
+footer a{color:white}
+#toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,100px);background:#182333;color:white;padding:13px 20px;border-radius:8px;transition:.25s;z-index:99}
+#toast.show{transform:translate(-50%,0)}
+.overlay{display:none;position:fixed;inset:0;background:#0008;z-index:100}
+.overlay.show{display:block}
+.cart-panel{position:fixed;right:-450px;top:0;width:min(430px,100%);height:100%;background:white;z-index:101;transition:.3s;display:flex;flex-direction:column;box-shadow:-5px 0 20px #0002}
+.cart-panel.show{right:0}
+.cart-head{background:var(--nav2);color:white;padding:18px;display:flex;justify-content:space-between;align-items:center}
+.cart-head h2{margin:0;font-size:21px}
+.close{background:none;color:white;border:0;font-size:28px}
+.cart-items{overflow:auto;padding:15px;flex:1}
+.cart-item{display:grid;grid-template-columns:75px 1fr;gap:12px;border-bottom:1px solid #ddd;padding:12px 0}
+.cart-item img{width:75px;height:75px;object-fit:contain}
+.cart-item h4{margin:0 0 8px;font-size:14px}
+.qty{display:flex;align-items:center;gap:12px;margin-top:8px}
+.qty button{border:1px solid #ccc;background:white;border-radius:4px;width:28px;height:27px}
+.remove{border:0;background:none;color:#b12704;font-size:12px;margin-left:8px}
+.cart-foot{border-top:1px solid #ddd;padding:18px}
+.total{font-size:21px;font-weight:bold;margin-bottom:13px}
+.cart-foot .btn{width:100%}
+@media(max-width:900px){
+ .top{gap:13px}.location{display:none}
+ .categories{grid-template-columns:repeat(3,1fr)}
+ .products{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .benefits{grid-template-columns:repeat(2,1fr)}
+ .hero{height:auto;min-height:270px}
+ .hero-text{padding:25px}
+ .hero img{min-height:270px}
+}
+@media(max-width:520px){
+ .top{padding:12px}.logo{font-size:24px}
+ .search{order:5;flex-basis:100%}
+ .nav{gap:17px}
+ main{padding:8px}
+ .hero{grid-template-columns:1fr}
+ .hero-text{padding:25px}
+ .hero img{height:180px;min-height:180px}
+ .categories{grid-template-columns:repeat(2,1fr)}
+ .category img{height:95px}
+ .products{gap:8px}
+ .product{padding:8px}
+ .product img{height:135px}
+ .product h3{font-size:13px}
+ .price{font-size:18px}
+ .section{padding:12px}
+ .heading h2{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+ <div class="logo">Quick<span>Kart</span></div>
+ <div class="location">Deliver to / यहाँ डिलीवरी<br><b>📍 India</b></div>
+ <form class="search" id="searchForm">
+  <select id="searchCategory" aria-label="Category">
+   <option value="All">All</option>
+   <option value="Electronics">Electronics</option>
+   <option value="Fashion">Fashion</option>
+   <option value="Home">Home</option>
+   <option value="Beauty">Beauty</option>
+   <option value="Lifestyle">Lifestyle</option>
+  </select>
+  <input id="searchInput" placeholder="Search QuickKart / सामान खोजें..." />
+  <button aria-label="Search">⌕</button>
+ </form>
+ <div class="top-action">Hello, welcome<br><b>QuickKart!</b></div>
+ <button class="cart-button" id="openCart">🛒 Cart <span id="cartCount">0</span></button>
+</header>
+
+<nav class="nav">
+ <a href="#categories">☰ All Categories</a>
+ <a href="#products" data-filter="Electronics">Electronics</a>
+ <a href="#products" data-filter="Fashion">Fashion</a>
+ <a href="#products" data-filter="Home">Home & Kitchen</a>
+ <a href="#products" data-filter="Beauty">Beauty</a>
+ <a href="#products" data-filter="Lifestyle">Lifestyle</a>
+ <a href="#products" data-filter="All">Today's Deals</a>
+</nav>
+
+<main>
+ <section class="hero">
+  <div class="hero-text">
+   <small>WELCOME TO QUICKKART | आपका स्वागत है</small>
+   <h1>Shopping made easy.<br>खरीदारी अब आसान!</h1>
+   <p>Discover everyday essentials, smart gadgets and stylish finds — सब कुछ एक ही जगह पर।</p>
+   <button class="btn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now / अभी खरीदें →</button>
+  </div>
+  <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1000&q=85" alt="Shopping bags and gifts">
+ </section>
+
+ <div class="benefits">
+  <div class="benefit"><b>🚚 Easy Shopping</b>Convenient online browsing</div>
+  <div class="benefit"><b>🏷️ Great Deals</b>Find your favourite products</div>
+  <div class="benefit"><b>🛍️ Multiple Categories</b>Everything in one place</div>
+  <div class="benefit"><b>🔒 Demo Checkout</b>Payment is not connected yet</div>
+ </div>
+
+ <section class="section" id="categories">
+  <div class="heading"><h2>Shop by Category / श्रेणी चुनें</h2></div>
+  <div class="categories">
+   <div class="category" data-cat="Electronics"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=450&q=80" alt="Headphones"><b>Electronics</b></div>
+   <div class="category" data-cat="Fashion"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=450&q=80" alt="Fashion"><b>Fashion / कपड़े</b></div>
+   <div class="category" data-cat="Home"><img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=450&q=80" alt="Kitchen"><b>Home & Kitchen</b></div>
+   <div class="category" data-cat="Beauty"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=450&q=80" alt="Beauty products"><b>Beauty / सुंदरता</b></div>
+   <div class="category" data-cat="Lifestyle"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=450&q=80" alt="Watch"><b>Lifestyle</b></div>
+   <div class="category" data-cat="All"><img src="https://images.unsplash.com/photo-1607083206968-13611e3d76db?auto=format&fit=crop&w=450&q=80" alt="Shopping"><b>All Products</b></div>
+  </div>
+ </section>
+
+ <section class="section" id="products">
+  <div class="heading"><h2 id="productHeading">Trending Products / लोकप्रिय सामान</h2><button class="btn" onclick="resetFilters()">Show All / सभी देखें</button></div>
+  <div class="products" id="productGrid"></div>
+ </section>
+
+ <section class="section">
+  <h2>QuickKart के साथ खरीदारी करें!</h2>
+  <p>अपने पसंदीदा products खोजें, cart में जोड़ें और total देखें। यह एक interactive demo website है।</p>
+  <p><b>For sellers / विक्रेताओं के लिए:</b> Real seller accounts और product upload के लिए backend setup करना होगा।</p>
+ </section>
+</main>
+
+<footer>
+ <div class="logo">Quick<span>Kart</span></div>
+ <p>Everyday shopping, made easy. | रोज़मर्रा की खरीदारी अब आसान।</p>
+ <p>© 2026 QuickKart Demo | Demo store — वास्तविक ऑर्डर या भुगतान अभी सक्रिय नहीं हैं।</p>
+</footer>
+
+<div id="toast"></div>
+<div class="overlay" id="overlay"></div>
+<aside class="cart-panel" id="cartPanel">
+ <div class="cart-head"><h2>Your Cart / आपकी टोकरी</h2><button class="close" id="closeCart">×</button></div>
+ <div class="cart-items" id="cartItems"></div>
+ <div class="cart-foot" id="cartFoot">
+  <div class="total">Subtotal / कुल: <span id="subtotal">₹0</span></div>
+  <button class="btn" id="checkout">Proceed / आगे बढ़ें</button>
+  <p style="font-size:12px;color:#666">Demo only. Payment gateway is not connected.</p>
+ </div>
+</aside>
+
+<script>
+const products = [
+ {id:1,name:"Wireless Headphones / वायरलेस हेडफोन",cat:"Electronics",seller:"QuickKart Demo",price:1499,old:2199,photo:"photo-1505740420928-5e560c06d30e"},
+ {id:2,name:"Smart Watch / स्मार्ट वॉच",cat:"Lifestyle",seller:"QuickKart Demo",price:1299,old:1999,photo:"photo-1523275335684-37898b6baf30"},
+ {id:3,name:"Running Shoes / स्पोर्ट्स शूज़",cat:"Fashion",seller:"QuickKart Demo",price:1799,old:2499,photo:"photo-1542291026-7eec264c27ff"},
+ {id:4,name:"Kitchen Essentials / किचन सामान",cat:"Home",seller:"QuickKart Demo",price:699,old:999,photo:"photo-1556911220-e15b29be8c8f"},
+ {id:5,name:"Beauty Care Kit / ब्यूटी किट",cat:"Beauty",seller:"QuickKart Demo",price:899,old:1299,photo:"photo-1608248543803-ba4f8c70ae0b"},
+ {id:6,name:"Travel Backpack / बैकपैक",cat:"Fashion",seller:"QuickKart Demo",price:999,old:1499,photo:"photo-1553062407-98eeb64c6a62"},
+ {id:7,name:"Bluetooth Speaker / स्पीकर",cat:"Electronics",seller:"QuickKart Demo",price:1099,old:1599,photo:"photo-1608043152269-423dbba4e7e1"},
+ {id:8,name:"Home Decor / घर की सजावट",cat:"Home",seller:"QuickKart Demo",price:549,old:799,photo:"photo-1616486338812-3dadae4b4ace"}
+];
+let cart={};
+let activeCategory="All";
+const money=n=>"₹"+n.toLocaleString("en-IN");
+const photo=p=>`https://images.unsplash.com/${p.photo}?auto=format&fit=crop&w=650&q=80`;
+
+function renderProducts(){
+ const query=document.getElementById("searchInput").value.trim().toLowerCase();
+ const category=document.getElementById("searchCategory").value;
+ const selected=activeCategory!=="All"?activeCategory:category;
+ const filtered=products.filter(p=>(selected==="All"||p.cat===selected)&&(!query||(p.name+" "+p.cat+" "+p.seller).toLowerCase().includes(query)));
+ document.getElementById("productHeading").textContent=selected==="All"?"Trending Products / लोकप्रिय सामान":selected+" / चुनी हुई श्रेणी";
+ document.getElementById("productGrid").innerHTML=filtered.length?filtered.map(p=>`
+  <article class="product">
+   <img src="${photo(p)}" alt="${p.name}" loading="lazy">
+   <div class="seller">${p.seller}</div>
+   <h3>${p.name}</h3>
+   <div class="rating">★★★★☆ <span style="color:#555">4.5</span></div>
+   <div class="price">${money(p.price)} <span class="old">${money(p.old)}</span></div>
+   <div class="discount">${Math.round((1-p.price/p.old)*100)}% off | बचत</div>
+   <p style="font-size:12px;color:#555">Demo product photo</p>
+   <button class="add" onclick="addToCart(${p.id})">Add to Cart / कार्ट में डालें</button>
+  </article>`).join(""):`<div class="empty">No products found / कोई सामान नहीं मिला।</div>`;
+ document.querySelectorAll(".category").forEach(el=>el.classList.toggle("active",el.dataset.cat===selected));
+}
+
+function addToCart(id){cart[id]=(cart[id]||0)+1;updateCart();toast("Added to cart / कार्ट में जुड़ गया");}
+function changeQty(id,amount){cart[id]=(cart[id]||0)+amount;if(cart[id]<=0)delete cart[id];updateCart();}
+function removeItem(id){delete cart[id];updateCart();}
+function updateCart(){
+ const entries=Object.entries(cart);
+ const count=entries.reduce((sum,[id,q])=>sum+q,0);
+ let total=0;
+ document.getElementById("cartCount").textContent=count;
+ document.getElementById("cartItems").innerHTML=entries.length?entries.map(([id,q])=>{
+  const p=products.find(x=>x.id===Number(id));total+=p.price*q;
+  return `<div class="cart-item">
+   <img src="${photo(p)}" alt="${p.name}">
+   <div><h4>${p.name}</h4><b>${money(p.price*q)}</b>
+    <div class="qty"><button onclick="changeQty(${p.id},-1)">−</button><span>${q}</span><button onclick="changeQty(${p.id},1)">+</button><button class="remove" onclick="removeItem(${p.id})">Remove</button></div>
+   </div>
+  </div>`;
+ }).join(""):`<div class="empty">🛒<br>Your cart is empty / आपकी टोकरी खाली है।</div>`;
+ document.getElementById("subtotal").textContent=money(total);
+ document.getElementById("cartFoot").style.display=count?"block":"none";
+}
+function setCategory(cat){
+ activeCategory=cat;
+ document.getElementById("searchCategory").value=cat;
+ renderProducts();
+ document.getElementById("products").scrollIntoView({behavior:"smooth"});
+}
+function resetFilters(){
+ activeCategory="All";
+ document.getElementById("searchCategory").value="All";
+ document.getElementById("searchInput").value="";
+ renderProducts();
+}
+function openCart(){document.getElementById("cartPanel").classList.add("show");document.getElementById("overlay").classList.add("show");}
+function closeCart(){document.getElementById("cartPanel").classList.remove("show");document.getElementById("overlay").classList.remove("show");}
+let toastTimer;
+function toast(msg){
+ const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");
+ clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2200);
+}
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();activeCategory="All";renderProducts();document.getElementById("products").scrollIntoView({behavior:"smooth"});});
+document.getElementById("searchInput").addEventListener("input",()=>{activeCategory="All";renderProducts();});
+document.getElementById("searchCategory").addEventListener("change",()=>{activeCategory="All";renderProducts();});
+document.querySelectorAll("[data-cat]").forEach(el=>el.addEventListener("click",()=>setCategory(el.dataset.cat)));
+document.querySelectorAll("[data-filter]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();setCategory(el.dataset.filter);}));
+document.getElementById("openCart").addEventListener("click",openCart);
+document.getElementById("closeCart").addEventListener("click",closeCart);
+document.getElementById("overlay").addEventListener("click",closeCart);
+document.getElementById("checkout").addEventListener("click",()=>toast("Demo only / अभी वास्तविक भुगतान उपलब्ध नहीं है।"));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCart();});
+renderProducts();updateCart();
+</script>
+</body>
+</html>
